@@ -24,6 +24,9 @@ class MemUnitRTL( Component ):
     num_entries   = 2
     CountType     = mk_bits( clog2( num_entries + 1 ) )
     FuInType      = mk_bits( clog2( num_inports + 1 ) )
+    # Max & Min address space
+    # Todo: Then Implement some kind of check where 
+    # Todo: if the address if invalid then Predicate = 0 in s.update
 
     # Interface
     s.recv_in        = [ RecvIfcRTL( DataType ) for _ in range( num_inports ) ]
@@ -129,8 +132,7 @@ class MemUnitRTL( Component ):
         s.send_out[0].en     @= s.recv_opt.en
         # Const's predicate will always be true.
         s.send_out[0].msg.predicate @= b1( 1 )
-
-      # TODO: and -> &
+        #! Important                       ^
       elif s.recv_opt.msg.ctrl == OPT_STR:
         s.send_out[0].en     @= s.from_mem_rdata.en & s.recv_in[s.in0_idx].en & s.recv_in[s.in1_idx].en
         s.recv_in[s.in0_idx].rdy   @= s.to_mem_waddr.rdy
